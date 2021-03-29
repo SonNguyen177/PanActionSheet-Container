@@ -21,7 +21,35 @@ extension State {
     }
 }
 
-class SharedActionSheetViewController: UIViewController {
+protocol SharedActionSheetPresenter : AnyObject {
+    
+    // set from outer
+    func actionSheetWrapperSender(_ handler : SharedActionSheetDelegate?)
+    
+    // call anywhere notify need close actionSheet
+//    func actionSheetShouldDismiss(_ userInfo : Any?)
+}
+
+//protocol SharedActionSheetDispatcher : AnyObject {
+//
+//    // set from outer
+//    func setActionSheetTarget(target : SharedActionSheetViewController, action : ((SharedActionSheetViewController,Any?) -> Void))
+//
+//    // call anywhere notify need close actionSheet
+//    func actionSheetShouldDismiss(_ userInfo : Any?)
+//}
+
+protocol SharedActionSheetDelegate : AnyObject {
+    func shouldDismissWith(_ userInfo : Any?)
+}
+
+class SharedActionSheetViewController: UIViewController, SharedActionSheetDelegate {
+    
+    func shouldDismissWith(_ userInfo: Any?) {
+        if let message = userInfo as? String {
+            print(message)
+        }
+    }
     
     //MARK: - Constants
     private var popupOffset: CGFloat = 200
@@ -32,11 +60,32 @@ class SharedActionSheetViewController: UIViewController {
     //MARK: - Fields
     private var currentState: State = .closed
     
+    private var completionDismiss: ((Any?) -> Void)?
+    
+    convenience init(custom: UIViewController & SharedActionSheetPresenter , preferHeight: CGFloat?) {
+        self.init()
+        
+        //
+        self.addChild(custom)
+        custom.didMove(toParent: self)
+        contentView = custom.view
+        if preferHeight != nil {
+            self.popupOffset = preferHeight!
+        }
+        
+        // assign handler = this wrapper
+        custom.actionSheetWrapperSender(self)
+    }
+    
     // MARK: - Views
     private lazy var popupView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        if #available(iOS 11.0, *) {
+            view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        } else {
+            // Fallback on earlier versions
+        }
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
         view.layer.shadowRadius = 10
@@ -62,17 +111,29 @@ class SharedActionSheetViewController: UIViewController {
         super.viewDidLoad()
 //        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 //        view.isOpaque = false
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.hide)))
+//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.hide)))
         
         layout()
        // popupView.addGestureRecognizer(tapRecognizer)
-        popupView.addGestureRecognizer(panRecognizer)
+       // popupView.addGestureRecognizer(panRecognizer)
+        let pan = UIPanGestureRecognizer()
+        pan.addTarget(self, action: #selector(popupViewPanned(recognizer:)))
+        popupView.addGestureRecognizer(pan)
     }
     
     // for add view by demand (AddChildController outer)
     func setCustomView(_ custom: UIView, preferHeight: CGFloat) {
         contentView = custom
         self.popupOffset = preferHeight
+    }
+    
+    func setCustomViewController(_ custom: UIViewController, preferHeight: CGFloat?) {
+        self.addChild(custom)
+        custom.didMove(toParent: self)
+        contentView = custom.view
+        if preferHeight != nil {
+            self.popupOffset = preferHeight!
+        }
     }
     
     private var bottomConstraint = NSLayoutConstraint()
@@ -102,13 +163,16 @@ class SharedActionSheetViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 8).isActive = true
         contentView.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -8).isActive = true
-        contentView.topAnchor.constraint(equalTo: swipeImageView.bottomAnchor, constant: 0).isActive = true
+        contentView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: topOffset).isActive = true
         contentView.bottomAnchor.constraint(equalTo: popupView.bottomAnchor).isActive = true
        
     }
     
-    @objc func show(){
+    @objc func show(_ completion: ((Any?) -> Void)? = nil){
+        self.completionDismiss = completion
         showInCurrent()
+        
+        // dismiss xong moi tra ve userInfo
     }
     
     @objc func hide(){
@@ -296,7 +360,9 @@ class SharedActionSheetViewController: UIViewController {
             self.runningAnimators.removeAll()
             
             if needDissmiss {
-                self.dismiss(animated: false, completion: nil)
+                self.dismiss(animated: false, completion: {
+                    self.completionDismiss
+                })
             }
         }
         
