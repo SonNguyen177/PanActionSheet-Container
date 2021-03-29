@@ -49,6 +49,8 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
         if let message = userInfo as? String {
             print(message)
         }
+        
+        self.hide()
     }
     
     //MARK: - Constants

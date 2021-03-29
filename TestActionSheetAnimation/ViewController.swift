@@ -51,12 +51,14 @@ class ViewController: UIViewController {
     }
     
     @objc func pressButton(){
-        let vc = CustomViewController()
+        //let vc = CustomViewController()
+        let vc = CustomTableViewController()
         SharedActionSheetViewController(custom: vc, preferHeight: 200).show()
     }
     
     @objc func pressModal(){
         let vc = CustomViewController()
+        
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: true, completion: nil)

@@ -15,6 +15,7 @@
 		FB2A348C260059E200F3EB74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB2A348B260059E200F3EB74 /* Assets.xcassets */; };
 		FB2A348F260059E200F3EB74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB2A348D260059E200F3EB74 /* LaunchScreen.storyboard */; };
 		FBE666962611C88500B392F4 /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE666952611C88500B392F4 /* CustomViewController.swift */; };
+		FBE6669A2611EDE000B392F4 /* CustomTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE666992611EDE000B392F4 /* CustomTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		FB2A348E260059E200F3EB74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB2A3490260059E200F3EB74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FBE666952611C88500B392F4 /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
+		FBE666992611EDE000B392F4 /* CustomTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				FB2A3484260059E100F3EB74 /* SceneDelegate.swift */,
 				FB2A3486260059E100F3EB74 /* ViewController.swift */,
 				FBE666952611C88500B392F4 /* CustomViewController.swift */,
+				FBE666992611EDE000B392F4 /* CustomTableViewController.swift */,
 				FB2A3488260059E100F3EB74 /* Main.storyboard */,
 				FB2A348B260059E200F3EB74 /* Assets.xcassets */,
 				FB2A348D260059E200F3EB74 /* LaunchScreen.storyboard */,
@@ -147,6 +150,7 @@
 				FB0C2EB1260AE37700F1DA8B /* SharedActionSheetViewController.swift in Sources */,
 				FBE666962611C88500B392F4 /* CustomViewController.swift in Sources */,
 				FB2A3483260059E100F3EB74 /* AppDelegate.swift in Sources */,
+				FBE6669A2611EDE000B392F4 /* CustomTableViewController.swift in Sources */,
 				FB2A3485260059E100F3EB74 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
