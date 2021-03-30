@@ -7,19 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FB0C2EB1260AE37700F1DA8B /* SharedActionSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0C2EB0260AE37700F1DA8B /* SharedActionSheetViewController.swift */; };
+		FB0C2EB1260AE37700F1DA8B /* EmbeddedActionSheetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0C2EB0260AE37700F1DA8B /* EmbeddedActionSheetModal.swift */; };
 		FB2A3483260059E100F3EB74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2A3482260059E100F3EB74 /* AppDelegate.swift */; };
 		FB2A3485260059E100F3EB74 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2A3484260059E100F3EB74 /* SceneDelegate.swift */; };
 		FB2A3487260059E100F3EB74 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2A3486260059E100F3EB74 /* ViewController.swift */; };
 		FB2A348A260059E100F3EB74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB2A3488260059E100F3EB74 /* Main.storyboard */; };
 		FB2A348C260059E200F3EB74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB2A348B260059E200F3EB74 /* Assets.xcassets */; };
 		FB2A348F260059E200F3EB74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB2A348D260059E200F3EB74 /* LaunchScreen.storyboard */; };
+		FB6C6CEA2612DCEB00EB2568 /* TableXibViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C6CE82612DCEB00EB2568 /* TableXibViewController.swift */; };
+		FB6C6CEB2612DCEB00EB2568 /* TableXibViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB6C6CE92612DCEB00EB2568 /* TableXibViewController.xib */; };
 		FBE666962611C88500B392F4 /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE666952611C88500B392F4 /* CustomViewController.swift */; };
 		FBE6669A2611EDE000B392F4 /* CustomTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE666992611EDE000B392F4 /* CustomTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FB0C2EB0260AE37700F1DA8B /* SharedActionSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedActionSheetViewController.swift; sourceTree = "<group>"; };
+		FB0C2EB0260AE37700F1DA8B /* EmbeddedActionSheetModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedActionSheetModal.swift; sourceTree = "<group>"; };
 		FB2A347F260059E100F3EB74 /* TestActionSheetAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestActionSheetAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB2A3482260059E100F3EB74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB2A3484260059E100F3EB74 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,6 +30,8 @@
 		FB2A348B260059E200F3EB74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB2A348E260059E200F3EB74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB2A3490260059E200F3EB74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB6C6CE82612DCEB00EB2568 /* TableXibViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableXibViewController.swift; sourceTree = "<group>"; };
+		FB6C6CE92612DCEB00EB2568 /* TableXibViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableXibViewController.xib; sourceTree = "<group>"; };
 		FBE666952611C88500B392F4 /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		FBE666992611EDE000B392F4 /* CustomTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,11 +71,13 @@
 				FB2A3486260059E100F3EB74 /* ViewController.swift */,
 				FBE666952611C88500B392F4 /* CustomViewController.swift */,
 				FBE666992611EDE000B392F4 /* CustomTableViewController.swift */,
+				FB6C6CE82612DCEB00EB2568 /* TableXibViewController.swift */,
+				FB6C6CE92612DCEB00EB2568 /* TableXibViewController.xib */,
 				FB2A3488260059E100F3EB74 /* Main.storyboard */,
 				FB2A348B260059E200F3EB74 /* Assets.xcassets */,
 				FB2A348D260059E200F3EB74 /* LaunchScreen.storyboard */,
 				FB2A3490260059E200F3EB74 /* Info.plist */,
-				FB0C2EB0260AE37700F1DA8B /* SharedActionSheetViewController.swift */,
+				FB0C2EB0260AE37700F1DA8B /* EmbeddedActionSheetModal.swift */,
 			);
 			path = TestActionSheetAnimation;
 			sourceTree = "<group>";
@@ -134,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB2A348F260059E200F3EB74 /* LaunchScreen.storyboard in Resources */,
+				FB6C6CEB2612DCEB00EB2568 /* TableXibViewController.xib in Resources */,
 				FB2A348C260059E200F3EB74 /* Assets.xcassets in Resources */,
 				FB2A348A260059E100F3EB74 /* Main.storyboard in Resources */,
 			);
@@ -147,7 +154,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB2A3487260059E100F3EB74 /* ViewController.swift in Sources */,
-				FB0C2EB1260AE37700F1DA8B /* SharedActionSheetViewController.swift in Sources */,
+				FB0C2EB1260AE37700F1DA8B /* EmbeddedActionSheetModal.swift in Sources */,
+				FB6C6CEA2612DCEB00EB2568 /* TableXibViewController.swift in Sources */,
 				FBE666962611C88500B392F4 /* CustomViewController.swift in Sources */,
 				FB2A3483260059E100F3EB74 /* AppDelegate.swift in Sources */,
 				FBE6669A2611EDE000B392F4 /* CustomTableViewController.swift in Sources */,

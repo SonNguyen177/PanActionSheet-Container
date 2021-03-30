@@ -1,6 +1,5 @@
 //
-//  SharedActionSheetViewController.swift
-//  TestActionSheetAnimation
+//  EmbeddedActionSheetModal.swift
 //
 //  Created by SonNH-HAV on 3/24/21.
 //
@@ -24,38 +23,24 @@ extension State {
 protocol SharedActionSheetPresenter : AnyObject {
     
     // set from outer
-    func actionSheetWrapperSender(_ handler : SharedActionSheetDelegate?)
+    func actionSheetWrapperSender(_ handler : EmbeddedActionSheetDelegate?)
     
     // call anywhere notify need close actionSheet
 //    func actionSheetShouldDismiss(_ userInfo : Any?)
 }
 
-//protocol SharedActionSheetDispatcher : AnyObject {
-//
-//    // set from outer
-//    func setActionSheetTarget(target : SharedActionSheetViewController, action : ((SharedActionSheetViewController,Any?) -> Void))
-//
-//    // call anywhere notify need close actionSheet
-//    func actionSheetShouldDismiss(_ userInfo : Any?)
-//}
 
-protocol SharedActionSheetDelegate : AnyObject {
+
+protocol EmbeddedActionSheetDelegate : AnyObject {
     func shouldDismissWith(_ userInfo : Any?)
 }
 
-class SharedActionSheetViewController: UIViewController, SharedActionSheetDelegate {
-    
-    func shouldDismissWith(_ userInfo: Any?) {
-        if let message = userInfo as? String {
-            print(message)
-        }
-        
-        self.hide()
-    }
+class EmbeddedActionSheetModal: UIViewController, EmbeddedActionSheetDelegate {
     
     //MARK: - Constants
     private var popupOffset: CGFloat = 200
     private let topOffset: CGFloat = 60
+    private let minTopOffset: CGFloat = 30
     private let durationAnimate : TimeInterval = 0.7
     private let shortDurationAnimate : TimeInterval = 0.3
     
@@ -63,20 +48,24 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
     private var currentState: State = .closed
     
     private var completionDismiss: ((Any?) -> Void)?
+    private var userInfo : Any?
+    private var headingTitle : String = ""
     
-    convenience init(custom: UIViewController & SharedActionSheetPresenter , preferHeight: CGFloat?) {
+    convenience init(custom: UIViewController , preferHeight: CGFloat?, title: String = "") {
         self.init()
-        
+        self.headingTitle = title
         //
-        self.addChild(custom)
-        custom.didMove(toParent: self)
-        contentView = custom.view
         if preferHeight != nil {
             self.popupOffset = preferHeight!
         }
         
-        // assign handler = this wrapper
-        custom.actionSheetWrapperSender(self)
+        self.addChild(custom)
+        contentView = custom.view
+        custom.didMove(toParent: self)
+        if let handler = custom as? (UIViewController & SharedActionSheetPresenter) {
+            // assign handler = this wrapper
+            handler.actionSheetWrapperSender(self)
+        }
     }
     
     // MARK: - Views
@@ -100,6 +89,16 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
         return imv
     }()
     
+    private lazy var headingLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        label.textAlignment = .center
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
+    
     // customView
     fileprivate var contentView: UIView!
     private lazy var defaultContentView: UIView = {
@@ -113,16 +112,19 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
         super.viewDidLoad()
 //        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 //        view.isOpaque = false
-//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.hide)))
         
         layout()
-       // popupView.addGestureRecognizer(tapRecognizer)
+//        popupView.addGestureRecognizer(tapRecognizer)
        // popupView.addGestureRecognizer(panRecognizer)
+        
+//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.hide)))
+        
         let pan = UIPanGestureRecognizer()
         pan.addTarget(self, action: #selector(popupViewPanned(recognizer:)))
         popupView.addGestureRecognizer(pan)
     }
     
+    /*
     // for add view by demand (AddChildController outer)
     func setCustomView(_ custom: UIView, preferHeight: CGFloat) {
         contentView = custom
@@ -137,37 +139,59 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
             self.popupOffset = preferHeight!
         }
     }
+    */
     
     private var bottomConstraint = NSLayoutConstraint()
+    
+    fileprivate func getHeaderOffset() -> CGFloat {
+        return headingTitle.isEmpty ? minTopOffset : topOffset
+    }
     
     private func layout() {
         popupView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(popupView)
         popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset)
+        // init with hide 100% height
+        bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset + getHeaderOffset())
         bottomConstraint.isActive = true
-        popupView.heightAnchor.constraint(equalToConstant: popupOffset + topOffset).isActive = true
+        popupView.heightAnchor.constraint(equalToConstant: popupOffset + getHeaderOffset()).isActive = true
         
-        popupView.addSubview(swipeImageView)
+        let topHeaderView = UIView()
+        popupView.addSubview(topHeaderView)
+        topHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        topHeaderView.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 10).isActive = true
+        topHeaderView.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -10).isActive = true
+        topHeaderView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 0).isActive = true
+        topHeaderView.heightAnchor.constraint(equalToConstant: getHeaderOffset()).isActive = true
+        topHeaderView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.hide)))
+        
+        topHeaderView.addSubview(swipeImageView)
         swipeImageView.translatesAutoresizingMaskIntoConstraints = false
-        swipeImageView.centerXAnchor.constraint(equalTo: popupView.centerXAnchor).isActive = true
-        swipeImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 0).isActive = true
+        swipeImageView.centerXAnchor.constraint(equalTo: topHeaderView.centerXAnchor).isActive = true
+        swipeImageView.topAnchor.constraint(equalTo: topHeaderView.topAnchor, constant: 0).isActive = true
         swipeImageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         swipeImageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        if contentView == nil {
-            contentView = defaultContentView
+        if !headingTitle.isEmpty {
+            headingLabel.text = headingTitle
+            topHeaderView.addSubview(headingLabel)
+            headingLabel.translatesAutoresizingMaskIntoConstraints = false
+            headingLabel.leadingAnchor.constraint(equalTo: topHeaderView.leadingAnchor, constant: 8).isActive = true
+            headingLabel.trailingAnchor.constraint(equalTo: topHeaderView.trailingAnchor, constant: -8).isActive = true
+            headingLabel.centerXAnchor.constraint(equalTo: topHeaderView.centerXAnchor).isActive = true
+            headingLabel.topAnchor.constraint(equalTo: swipeImageView.bottomAnchor, constant: 0).isActive = true
         }
         
+     
         popupView.addSubview(contentView)
-        contentView.isUserInteractionEnabled = true
+        
         contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 8).isActive = true
         contentView.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -8).isActive = true
-        contentView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: topOffset).isActive = true
-        contentView.bottomAnchor.constraint(equalTo: popupView.bottomAnchor).isActive = true
-       
+        contentView.topAnchor.constraint(equalTo: topHeaderView.bottomAnchor, constant: 0).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: popupOffset).isActive = true
+        contentView.layoutIfNeeded()
     }
     
     @objc func show(_ completion: ((Any?) -> Void)? = nil){
@@ -200,6 +224,15 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
         return nil
     }
 
+    //MARK: ActionSheetDelegate
+    func shouldDismissWith(_ userInfo: Any?) {
+        if let message = userInfo as? String {
+            print(message)
+        }
+        self.userInfo = userInfo
+        
+        self.hide()
+    }
     
     /*
     //MARK: - Tap Gesture
@@ -276,7 +309,7 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
             
             // variable setup
             let translation = recognizer.translation(in: popupView)
-            var fraction = -translation.y / (popupOffset + topOffset)
+            var fraction = -translation.y / (popupOffset + getHeaderOffset())
             
             // adjust the fraction for the current state and reversed state
             if currentState == .open { fraction *= -1 }
@@ -330,7 +363,7 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
                 self.popupView.layer.cornerRadius = 20
             case .closed:
                 self.popupView.layer.cornerRadius = 0
-                self.bottomConstraint.constant = self.popupOffset + self.topOffset // hide all
+                self.bottomConstraint.constant = self.popupOffset + self.getHeaderOffset() // hide all
             }
             //
             self.view.layoutIfNeeded()
@@ -354,7 +387,7 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
             case .open:
                 self.bottomConstraint.constant = 0
             case .closed:
-                self.bottomConstraint.constant = self.popupOffset + self.topOffset // hide all
+                self.bottomConstraint.constant = self.popupOffset + self.getHeaderOffset() // hide all
                 needDissmiss = true
             }
             
@@ -362,8 +395,9 @@ class SharedActionSheetViewController: UIViewController, SharedActionSheetDelega
             self.runningAnimators.removeAll()
             
             if needDissmiss {
+                // ActionSheet dismiss xong moi tra ve completion
                 self.dismiss(animated: false, completion: {
-                    self.completionDismiss
+                    self.completionDismiss?(self.userInfo)
                 })
             }
         }

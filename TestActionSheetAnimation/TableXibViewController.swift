@@ -1,37 +1,24 @@
 //
-//  CustomTableViewController.swift
+//  TableXibViewController.swift
 //  TestActionSheetAnimation
 //
-//  Created by SonNH-HAV on 3/29/21.
+//  Created by SonNH-HAV on 3/30/21.
 //
 
 import UIKit
 
-class CustomTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate , SharedActionSheetPresenter {
+class TableXibViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    
-    var wrapper : EmbeddedActionSheetDelegate?
-    func actionSheetWrapperSender(_ handler: EmbeddedActionSheetDelegate?) {
-        wrapper = handler
-    }
-    
-    let tableView = UITableView()
-    
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
-        self.view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.rowHeight = 40
+        tableView.reloadData()
     }
     
     
@@ -45,8 +32,18 @@ class CustomTableViewController: UIViewController, UITableViewDataSource, UITabl
      }
      */
     
+    /*
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        20
+        return  40
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,16 +54,17 @@ class CustomTableViewController: UIViewController, UITableViewDataSource, UITabl
             return cell
         }()
         
-        cell.textLabel?.text = "Cell = \(indexPath.row)"
+        cell.textLabel?.text = "XibCell = \(indexPath.row)"
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let actionSheetMode = wrapper {
-            wrapper?.shouldDismissWith("Selected Cell = \(indexPath.row)")
-        } else {
-            self.dismiss(animated: true, completion: nil)
-        }
+        //    if let actionSheetMode = wrapper {
+        //        wrapper?.shouldDismissWith("Selected Cell = \(indexPath.row)")
+        //    } else {
+        self.dismiss(animated: true, completion: nil)
+        //    }
     }
+    
 }

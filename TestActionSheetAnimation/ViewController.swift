@@ -53,11 +53,15 @@ class ViewController: UIViewController {
     @objc func pressButton(){
         //let vc = CustomViewController()
         let vc = CustomTableViewController()
-        SharedActionSheetViewController(custom: vc, preferHeight: 200).show()
+//        let vc = TableXibViewController(nibName: "TableXibViewController", bundle: nil)
+        EmbeddedActionSheetModal(custom: vc, preferHeight: 400, title: "" ).show { (info) in
+            print("EmbeddedActionSheetModal.completion : \((info as? String) ?? "unknown" )")
+        }
     }
     
     @objc func pressModal(){
-        let vc = CustomViewController()
+        //let vc = CustomTableViewController()
+        let vc = TableXibViewController(nibName: "TableXibViewController", bundle: nil)
         
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overFullScreen

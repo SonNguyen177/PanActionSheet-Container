@@ -10,8 +10,8 @@ import UIKit
 class CustomViewController: UIViewController, SharedActionSheetPresenter {
     
     
-    var wrapper : SharedActionSheetDelegate?
-    func actionSheetWrapperSender(_ handler: SharedActionSheetDelegate?) {
+    var wrapper : EmbeddedActionSheetDelegate?
+    func actionSheetWrapperSender(_ handler: EmbeddedActionSheetDelegate?) {
         wrapper = handler
     }
     
